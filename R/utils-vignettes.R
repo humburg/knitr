@@ -67,6 +67,12 @@ body(vweave_rmarkdown)[5L] = expression(rmarkdown::render(
   file, encoding = encoding, quiet = quiet, envir = globalenv()
 ))
 
+vweave_multiformat = vweave
+body(vweave_multiformat)[5L] = expression(rmarkdown::render(
+  file, encoding = encoding, quiet = quiet, envir = globalenv(), 
+  output_format='all'
+))
+
 # do not tangle R code from vignettes
 untangle_weave = function(vig_list, eng) {
   weave = vig_list[[c(eng, 'weave')]]
@@ -99,6 +105,19 @@ register_vignette_engines = function(pkg) {
     warning('The vignette engine knitr::rmarkdown is not available, ',
             'because the rmarkdown package is not installed. Please install it.')
     vweave(...)
+  }, '[.][Rr](md|markdown)$')
+  vig_engine('multiformat', function(...) if (has_package('multiformat')) {
+	if (pandoc_available()) {
+	  vweave_multiformat(...)
+	} else {
+	if (!is_R_CMD_check())
+	  warning('Pandoc (>= 1.12.3) and/or pandoc-citeproc is not available. Please install both.')
+		vweave(...)
+	  }
+	} else {
+	  warning('The vignette engine knitr::multiformat is not available, ',
+		'because the rmarkdown package is not installed. Please install it.')
+	  vweave(...)
   }, '[.][Rr](md|markdown)$')
   # vignette engines that disable tangle
   vig_list = tools::vignetteEngine(package = 'knitr')
