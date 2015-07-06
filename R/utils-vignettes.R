@@ -80,7 +80,7 @@ untangle_weave = function(vig_list, eng) {
   # function is different (not vweave_rmarkdown above, but the function(...)
   # defined below in vig_engine('rmarkdown'), and it is not straightforward to
   # remove the purl hook there)
-  if (eng != 'knitr::rmarkdown') body(weave)[4L] = expression({})
+  if (!eng %in% c('knitr::rmarkdown', 'knitr::muliformat')) body(weave)[4L] = expression({})
   weave
 }
 vtangle_empty = function(file, ...) {
