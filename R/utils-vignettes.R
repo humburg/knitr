@@ -106,7 +106,7 @@ register_vignette_engines = function(pkg) {
             'because the rmarkdown package is not installed. Please install it.')
     vweave(...)
   }, '[.][Rr](md|markdown)$')
-  vig_engine('multiformat', function(...) if (has_package('multiformat')) {
+  vig_engine('multiformat', function(...) if (has_package('rmarkdown')) {
 	if (pandoc_available()) {
 	  vweave_multiformat(...)
 	} else {
